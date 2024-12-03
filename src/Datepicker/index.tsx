@@ -2,6 +2,8 @@ import { useState } from 'react';
 import dayjs, { type Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import styled from 'styled-components';
+import Next from './icons/Next';
+import Previous from './icons/Previous';
 import { calendarUtils } from './utils';
 
 dayjs.extend(isBetween);
@@ -39,6 +41,10 @@ const DefaultButton = styled.button`
 const Button = styled(DefaultButton)`
   width: 44px;
   height: 44px;
+
+  > svg {
+    width: 14px;
+  }
 `;
 
 const Body = styled.div`
@@ -74,29 +80,21 @@ const NoteCurrentMonthDay = styled(Day)`
 `;
 
 const Datepicker = () => {
-  const [currentDate, setCurrentDate] = useState<Dayjs>(dayjs());
+  const currentDate: Dayjs = dayjs();
   const [selectedDate, setSelectedDate] = useState<string[]>([]);
   const { prevMonthDays, days, nextMonthDays } = calendarUtils(currentDate);
 
   return (
     <Container>
       <Header>
-        <Button
-          onClick={() => {
-            setCurrentDate(currentDate.subtract(1, 'month'));
-          }}
-        >
-          ＜
+        <Button>
+          <Previous />
         </Button>
         <span>
           {currentDate.format('YYYY')}年{currentDate.format('M')}月
         </span>
-        <Button
-          onClick={() => {
-            setCurrentDate(currentDate.add(1, 'month'));
-          }}
-        >
-          ＞
+        <Button>
+          <Next />
         </Button>
       </Header>
       <Body>
@@ -128,7 +126,7 @@ const Datepicker = () => {
           return (
             <Day
               key={`${currentDate.format('YYYY-MM')}-${day}`}
-              isToday={dayjs().isSame(
+              isToday={currentDate.isSame(
                 dayjs(`${currentDate.format('YYYY-MM')}-${day}`),
                 'day',
               )}
