@@ -1,14 +1,9 @@
 import { useState } from 'react';
 import dayjs from 'dayjs';
-import isBetween from 'dayjs/plugin/isBetween';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import styled from 'styled-components';
 import Next from './icons/Next';
 import Previous from './icons/Previous';
 import useCalendar from './useCalendar';
-
-dayjs.extend(isBetween);
-dayjs.extend(isSameOrAfter);
 
 const Container = styled.div`
   width: 350px;
@@ -101,6 +96,7 @@ const Datepicker = () => {
       <Body>
         {prevMonthDays.map(day => (
           <NoteCurrentMonthDay
+            aria-label="notActive"
             disabled
             key={`${currentDate.subtract(1, 'month').format('YYYY-MM')}-${day}`}
             isToday={dayjs().isSame(
@@ -132,6 +128,7 @@ const Datepicker = () => {
 
           return (
             <Day
+              aria-label="active"
               key={`${currentDate.format('YYYY-MM')}-${day}`}
               isToday={dayjs().isSame(
                 dayjs(`${currentDate.format('YYYY-MM')}-${day}`),
@@ -156,6 +153,7 @@ const Datepicker = () => {
         })}
         {nextMonthDays.map(day => (
           <NoteCurrentMonthDay
+            aria-label="notActive"
             disabled
             key={`${currentDate.add(1, 'month').format('YYYY-MM')}-${day}`}
             isToday={dayjs().isSame(

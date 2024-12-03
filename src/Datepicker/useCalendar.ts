@@ -1,16 +1,20 @@
 import { useMemo } from 'react';
 import dayjs, { type Dayjs } from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
-interface CalendarReturnType {
+dayjs.extend(isBetween);
+dayjs.extend(isSameOrAfter);
+
+export interface CalendarReturnType {
   currentDate: Dayjs;
   prevMonthDays: number[];
   days: number[];
   nextMonthDays: number[];
-  day: number;
 }
 
 const useCalendar = (): CalendarReturnType => {
-  const currentDate = dayjs();
+  const currentDate = dayjs().startOf('day');
   const daysInPrevMonth = currentDate.subtract(1, 'month').daysInMonth();
   const dayInCurrentMonth = currentDate.startOf('month').day();
 
@@ -21,7 +25,6 @@ const useCalendar = (): CalendarReturnType => {
         { length: currentDate.daysInMonth() },
         (_, index) => index + 1,
       ),
-      day: Number(currentDate.format('DD')),
       prevMonthDays: Array.from(
         { length: dayInCurrentMonth },
         (_, index) => daysInPrevMonth - index,
