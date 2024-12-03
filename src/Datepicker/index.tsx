@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import dayjs, { type Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import styled from 'styled-components';
 import Next from './icons/Next';
 import Previous from './icons/Previous';
-import { calendarUtils } from './utils';
+import useCalendar from './useCalendar';
 
 dayjs.extend(isBetween);
+dayjs.extend(isSameOrAfter);
 
 const Container = styled.div`
   width: 350px;
@@ -42,7 +44,7 @@ const Button = styled(DefaultButton)`
   width: 44px;
   height: 44px;
 
-  > svg {
+  svg {
     width: 14px;
   }
 `;
@@ -80,9 +82,8 @@ const NoteCurrentMonthDay = styled(Day)`
 `;
 
 const Datepicker = () => {
-  const currentDate: Dayjs = dayjs();
   const [selectedDate, setSelectedDate] = useState<string[]>([]);
-  const { prevMonthDays, days, nextMonthDays } = calendarUtils(currentDate);
+  const { currentDate, prevMonthDays, days, nextMonthDays } = useCalendar();
 
   return (
     <Container>
@@ -100,8 +101,14 @@ const Datepicker = () => {
       <Body>
         {prevMonthDays.map(day => (
           <NoteCurrentMonthDay
-            key={`${currentDate.subtract(1, 'month').format('YYYY-MM')}-${day}`}
             disabled
+            key={`${currentDate.subtract(1, 'month').format('YYYY-MM')}-${day}`}
+            isToday={dayjs().isSame(
+              dayjs(
+                `${currentDate.subtract(1, 'month').format('YYYY-MM')}-${day}`,
+              ),
+              'day',
+            )}
           >
             {day}日
           </NoteCurrentMonthDay>
@@ -126,7 +133,7 @@ const Datepicker = () => {
           return (
             <Day
               key={`${currentDate.format('YYYY-MM')}-${day}`}
-              isToday={currentDate.isSame(
+              isToday={dayjs().isSame(
                 dayjs(`${currentDate.format('YYYY-MM')}-${day}`),
                 'day',
               )}
@@ -137,8 +144,10 @@ const Datepicker = () => {
                 if (selectedDate.length === 0 || selectedDate.length === 2)
                   setSelectedDate([selected]);
 
-                if (selectedDate.length === 1 && selectedDate[0] !== selected)
-                  setSelectedDate(pre => [...pre, selected]);
+                if (selectedDate.length === 1)
+                  if (dayjs(selectedDate[0]).isSameOrAfter(selected, 'day'))
+                    setSelectedDate([selected]);
+                  else setSelectedDate(pre => [...pre, selected]);
               }}
             >
               {day}日
@@ -147,8 +156,12 @@ const Datepicker = () => {
         })}
         {nextMonthDays.map(day => (
           <NoteCurrentMonthDay
-            key={`${currentDate.add(1, 'month').format('YYYY-MM')}-${day}`}
             disabled
+            key={`${currentDate.add(1, 'month').format('YYYY-MM')}-${day}`}
+            isToday={dayjs().isSame(
+              dayjs(`${currentDate.add(1, 'month').format('YYYY-MM')}-${day}`),
+              'day',
+            )}
           >
             {day}日
           </NoteCurrentMonthDay>
