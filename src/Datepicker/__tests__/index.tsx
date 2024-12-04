@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom';
 import { render, renderHook, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import 'jest-styled-components';
 import useCalendar from '../useCalendar';
-import Datepicker from '..';
+import Datepicker, { Day } from '..';
 
 describe('render Datepicker', () => {
   const mockDate = '2024-11-01';
@@ -67,5 +68,29 @@ describe('render Datepicker', () => {
         backgroundColor: '#e6e6e6',
       });
     }
+  });
+
+  it('test styled-components', () => {
+    const { container, rerender } = render(<Day isToday />);
+
+    expect(container.firstChild).toHaveStyleRule('background-color', '#ffff76');
+    expect(container.firstChild).toHaveStyleRule(
+      'background-color',
+      '#e6e6e6',
+      {
+        modifier: ':hover',
+      },
+    );
+
+    rerender(<Day isToday isBetween />);
+
+    expect(container.firstChild).toHaveStyleRule('background-color', '#006edc');
+    expect(container.firstChild).toHaveStyleRule(
+      'background-color',
+      '#e6e6e6',
+      {
+        modifier: ':hover',
+      },
+    );
   });
 });

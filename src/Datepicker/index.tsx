@@ -50,7 +50,10 @@ const Body = styled.div`
   grid-template-columns: repeat(7, 50px);
 `;
 
-const Day = styled(DefaultButton)<{ isToday?: boolean; isBetween?: boolean }>`
+export const Day = styled(DefaultButton)<{
+  isToday?: boolean;
+  isBetween?: boolean;
+}>`
   text-align: center;
   height: 36px;
   line-height: 36px;
