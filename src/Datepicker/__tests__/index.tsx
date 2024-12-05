@@ -70,7 +70,7 @@ describe('render Datepicker', () => {
     }
   });
 
-  it('test styled-components', () => {
+  it('test Day styled-components', () => {
     const { container, rerender } = render(<Day isToday />);
 
     expect(container.firstChild).toHaveStyleRule('background-color', '#ffff76');
