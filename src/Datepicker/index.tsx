@@ -142,13 +142,15 @@ const Datepicker = () => {
               onClick={() => {
                 const selected = `${currentDate.format('YYYY-MM')}-${day}`;
 
-                if (selectedDate.length === 0 || selectedDate.length === 2)
+                if (selectedDate.length === 0 || selectedDate.length === 2) {
                   setSelectedDate([selected]);
 
-                if (selectedDate.length === 1)
-                  if (dayjs(selectedDate[0]).isSameOrAfter(selected, 'day'))
-                    setSelectedDate([selected]);
-                  else setSelectedDate(pre => [...pre, selected]);
+                  return;
+                }
+
+                if (dayjs(selectedDate[0]).isSameOrAfter(selected, 'day'))
+                  setSelectedDate([selected]);
+                else setSelectedDate(pre => [...pre, selected]);
               }}
             >
               {day}日
