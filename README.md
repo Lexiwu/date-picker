@@ -2,6 +2,12 @@
 
 date-picker by using react
 
+### Prepare
+
+use `yarn` v1.x.x
+
+See [How to install yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable).
+
 ### How to run
 
 1. install dependencies
